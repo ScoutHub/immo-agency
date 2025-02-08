@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 import { Search, Filter, List, Map } from "lucide-react";
@@ -7,9 +8,10 @@ import SelectboxFilter from "../components/selectbox-filter";
 import { Input } from "@/components/ui/input";
 import { Button } from "../components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useEffect, useState } from "react";
 import SkeletonCard from "../components/skeleton-item";
 import { PageShowing } from "../components/page-animation";
+
+import { items } from "@/data/fake-data";
 
 export default function Home() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -50,14 +52,14 @@ export default function Home() {
             <TabsList className="bg-[#162242]">
               <TabsTrigger
                 value="list"
-                className="data-[state=active]:bg-blue-800 text-gray-300"
+                className="data-[state=active]:bg-blue-800 text-gray-300 flex gap-2"
               >
                 <List size={18} />
                 <p>Liste</p>
               </TabsTrigger>
               <TabsTrigger
                 value="map"
-                className="data-[state=active]:bg-blue-800 text-gray-300"
+                className="data-[state=active]:bg-blue-800 text-gray-300 flex gap-2"
               >
                 <Map size={18} />
                 <p>Carte</p>
@@ -91,7 +93,7 @@ export default function Home() {
           {loading ? (
             <AnimatePresence>
               <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6 justify-center">
-                {Array.from({ length: 6 }).map((_, i) => (
+                {Array.from({ length: items.length }).map((_, i) => (
                   <motion.div
                     key={i}
                     initial={{ opacity: 0, y: 20 }}
@@ -110,7 +112,7 @@ export default function Home() {
           ) : (
             <AnimatePresence>
               <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
-                {Array.from({ length: 10 }).map((_, i) => (
+                {items.map((item, i) => (
                   <motion.div
                     key={i}
                     initial={{ opacity: 0, y: 20 }}
@@ -121,7 +123,14 @@ export default function Home() {
                       stiffness: 100,
                     }}
                   >
-                    <CardItem />
+                    <CardItem
+                      badges={item.badges}
+                      city={item.city}
+                      rendementBrut={item.rendementBrut}
+                      rendementNet={item.rendementNet}
+                      image={item.image}
+                      price={item.price}
+                    />
                   </motion.div>
                 ))}
               </div>
