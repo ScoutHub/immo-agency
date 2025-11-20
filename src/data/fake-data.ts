@@ -6,6 +6,8 @@ export const items = [
     rendementNet: 7.2,
     price: 540000,
     image: "/houses/villa.jpg",
+    lat: 45.764,
+    lng: 4.834,
   },
   {
     city: "Lyon",
@@ -14,6 +16,8 @@ export const items = [
     rendementNet: 7.2,
     price: 435000,
     image: "/houses/villa2.jpg",
+    lat: 45.756,
+    lng: 4.842,
   },
   {
     city: "Lyon",
@@ -22,6 +26,8 @@ export const items = [
     rendementNet: 7.2,
     price: 630000,
     image: "/houses/villa3.jpg",
+    lat: 45.771,
+    lng: 4.829,
   },
   {
     city: "Lyon",
@@ -30,6 +36,8 @@ export const items = [
     rendementNet: 7.2,
     price: 710000,
     image: "/houses/villa4.jpg",
+    lat: 45.751,
+    lng: 4.848,
   },
   {
     city: "Lyon",
@@ -38,6 +46,8 @@ export const items = [
     rendementNet: 7.2,
     price: 360000,
     image: "/houses/villa5.jpg",
+    lat: 45.768,
+    lng: 4.821,
   },
   {
     city: "Lyon",
@@ -46,6 +56,8 @@ export const items = [
     rendementNet: 7.2,
     price: 410000,
     image: "/houses/villa6.jpg",
+    lat: 45.745,
+    lng: 4.838,
   },
   {
     city: "Lyon",
@@ -54,6 +66,8 @@ export const items = [
     rendementNet: 7.2,
     price: 730000,
     image: "/houses/villa7.jpg",
+    lat: 45.759,
+    lng: 4.815,
   },
   {
     city: "Lyon",
@@ -62,6 +76,8 @@ export const items = [
     rendementNet: 7.2,
     price: 360000,
     image: "/houses/villa8.jpg",
+    lat: 45.772,
+    lng: 4.851,
   },
   {
     city: "Lyon",
@@ -70,5 +86,7 @@ export const items = [
     rendementNet: 7.2,
     price: 510000,
     image: "/houses/villa9.jpg",
+    lat: 45.754,
+    lng: 4.825,
   },
 ];

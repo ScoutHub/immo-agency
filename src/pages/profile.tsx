@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import Chart from "@/components/chart";
 
 import { PageShowing, SectionShowing } from "@/components/page-animation";
+
 export default function Profile() {
   return (
     <PageShowing>

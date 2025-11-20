@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, lazy, Suspense } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 import { Search, Filter, List, Map } from "lucide-react";
@@ -7,14 +7,17 @@ import CardItem from "../components/card-item";
 import SelectboxFilter from "../components/selectbox-filter";
 import { Input } from "@/components/ui/input";
 import { Button } from "../components/ui/button";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import SkeletonCard from "../components/skeleton-item";
 import { PageShowing } from "../components/page-animation";
 
 import { items } from "@/data/fake-data";
 
+const MapView = lazy(() => import("../components/map-view"));
+
 export default function Home() {
   const [loading, setLoading] = useState<boolean>(true);
+  const [activeTab, setActiveTab] = useState<string>("list");
 
   useEffect(() => {
     setTimeout(() => {
@@ -29,9 +32,9 @@ export default function Home() {
           initial={{ y: -50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ type: "spring", stiffness: 100 }}
-          className="flex flex-col md:flex-row items-center gap-4 mb-8 bg-[#101E3C] rounded-xl p-4 shadow-lg"
+          className="flex flex-col md:flex-row items-center justify-between gap-4 mb-8 bg-[#101E3C] rounded-xl p-4 shadow-lg"
         >
-          <div className="flex gap-3 items-center ">
+          <div className="flex gap-3 items-center w-full md:w-auto">
             <SelectboxFilter />
             <Input
               placeholder="Paris"
@@ -48,7 +51,12 @@ export default function Home() {
               <p>Filtres (3)</p>
             </Button>
           </div>
-          <Tabs defaultValue="list" className="md:ml-auto mt-4 md:mt-0">
+
+          <Tabs
+            value={activeTab}
+            onValueChange={setActiveTab}
+            className="w-full md:w-auto"
+          >
             <TabsList className="bg-[#162242]">
               <TabsTrigger
                 value="list"
@@ -68,75 +76,135 @@ export default function Home() {
           </Tabs>
         </motion.section>
 
-        <motion.section
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.3 }}
-          className="px-4"
-        >
-          <div className="text-left mb-6">
-            <motion.h3
-              initial={{ x: -50 }}
-              animate={{ x: 0 }}
-              className="font-bold text-3xl text-blue-300"
+        <Tabs value={activeTab} className="w-full">
+          <TabsContent value="list">
+            <motion.section
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.3 }}
             >
-              Biens en vente à LYON
-            </motion.h3>
-            <motion.h4
-              initial={{ x: -30 }}
-              animate={{ x: 0 }}
-              className="font-semibold text-gray-400"
+              <div className="text-left mb-6">
+                <motion.h3
+                  initial={{ x: -50 }}
+                  animate={{ x: 0 }}
+                  className="font-bold text-3xl text-blue-300"
+                >
+                  Biens en vente à LYON
+                </motion.h3>
+                <motion.h4
+                  initial={{ x: -30 }}
+                  animate={{ x: 0 }}
+                  className="font-semibold text-gray-400"
+                >
+                  {items.length} Résultats à votre recherche
+                </motion.h4>
+              </div>
+              {loading ? (
+                <AnimatePresence mode="wait">
+                  <div key="skeleton" className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
+                    {Array.from({ length: items.length }).map((_, i) => (
+                      <motion.div
+                        key={`skeleton-${i}`}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{
+                          delay: i * 0.1,
+                          type: "spring",
+                          stiffness: 100,
+                        }}
+                      >
+                        <SkeletonCard />
+                      </motion.div>
+                    ))}
+                  </div>
+                </AnimatePresence>
+              ) : (
+                <AnimatePresence mode="wait">
+                  <div key="content">
+                    <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
+                      {items.map((item, i) => (
+                        <motion.div
+                          key={i}
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{
+                            delay: i * 0.1,
+                            type: "spring",
+                            stiffness: 100,
+                          }}
+                        >
+                          <CardItem
+                            badges={item.badges}
+                            city={item.city}
+                            rendementBrut={item.rendementBrut}
+                            rendementNet={item.rendementNet}
+                            image={item.image}
+                            price={item.price}
+                          />
+                        </motion.div>
+                      ))}
+                    </div>
+                    <div className="flex gap-3 justify-center my-14">
+                      <Button
+                        variant="outline"
+                        className="bg-[#1A2B4A] text-gray-200 hover:bg-[#233756] border-none"
+                        disabled
+                      >
+                        Précédent
+                      </Button>
+                      <Button
+                        variant="outline"
+                        className="bg-[#1A2B4A] text-gray-200 hover:bg-[#233756] border-none"
+                      >
+                        Suivant
+                      </Button>
+                    </div>
+                  </div>
+                </AnimatePresence>
+              )}
+            </motion.section>
+          </TabsContent>
+
+          <TabsContent value="map">
+            <motion.section
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.3 }}
+              className="px-4"
             >
-              32 Résultats à votre recherche
-            </motion.h4>
-          </div>
-          {loading ? (
-            <AnimatePresence>
-              <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6 justify-center">
-                {Array.from({ length: items.length }).map((_, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{
-                      delay: i * 0.1,
-                      type: "spring",
-                      stiffness: 100,
-                    }}
-                  >
-                    <SkeletonCard />
-                  </motion.div>
-                ))}
+              <div className="text-left mb-6">
+                <motion.h3
+                  initial={{ x: -50 }}
+                  animate={{ x: 0 }}
+                  className="font-bold text-3xl text-blue-300"
+                >
+                  Carte des biens à LYON
+                </motion.h3>
+                <motion.h4
+                  initial={{ x: -30 }}
+                  animate={{ x: 0 }}
+                  className="font-semibold text-gray-400"
+                >
+                  {items.length} propriétés disponibles
+                </motion.h4>
               </div>
-            </AnimatePresence>
-          ) : (
-            <AnimatePresence>
-              <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
-                {items.map((item, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{
-                      delay: i * 0.1,
-                      type: "spring",
-                      stiffness: 100,
-                    }}
-                  >
-                    <CardItem
-                      badges={item.badges}
-                      city={item.city}
-                      rendementBrut={item.rendementBrut}
-                      rendementNet={item.rendementNet}
-                      image={item.image}
-                      price={item.price}
-                    />
-                  </motion.div>
-                ))}
-              </div>
-            </AnimatePresence>
-          )}
-        </motion.section>
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.3 }}
+                className="w-full"
+              >
+                <Suspense
+                  fallback={
+                    <div className="w-full h-[700px] bg-[#162242] rounded-xl animate-pulse" />
+                  }
+                >
+                  <MapView />
+                </Suspense>
+              </motion.div>
+            </motion.section>
+          </TabsContent>
+        </Tabs>
       </PageShowing>
     </div>
   );

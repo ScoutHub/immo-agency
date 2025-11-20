@@ -46,7 +46,7 @@ export function AppSidebar() {
         <SidebarContent className="bg-[#101E3C] text-gray-100 border-r border-[#2C3E50]">
           <SidebarGroup className="h-full">
             <SidebarHeader className="font-bold text-center text-2xl text-blue-300 py-4 border-b border-[#2C3E50]">
-              XYZ
+              E-Mobilier
             </SidebarHeader>
             <SidebarGroupContent className="mt-16">
               <SidebarMenu className="p-4 gap-3">
